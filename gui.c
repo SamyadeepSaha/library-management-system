@@ -1,6 +1,19 @@
 // #include<gtk/gtk.h>
 #include"gui.h"
 
+int start_app(int argc, char **argv)
+{
+    int status;
+
+    app = gtk_application_new("dist.library", G_APPLICATION_DEFAULT_FLAGS);
+
+    g_signal_connect(G_APPLICATION(app), "activate", G_CALLBACK(activate), NULL);
+
+    status = g_application_run(G_APPLICATION(app), argc, argv);
+
+    return status;
+}
+
 static void activate(GtkApplication *app, gpointer user_data)
 {
     // Define gtk window, box, buttons and fixed container
@@ -49,6 +62,9 @@ static void activate(GtkApplication *app, gpointer user_data)
     sel_op = gtk_label_new("Select an option");
     gtk_fixed_put(GTK_FIXED(fixed), sel_op, 100, 100);
 
+    // Add function to buttons
+    g_signal_connect(abb, "clicked", G_CALLBACK(abb_hnd), NULL);
+
     /*
     // Put buttons in member container
     gtk_fixed_put(GTK_FIXED(m_fixed), add_m_bt, 50, 100);
@@ -75,16 +91,117 @@ static void activate(GtkApplication *app, gpointer user_data)
     gtk_widget_show_all(window);
 }
 
-int start_app(int argc, char **argv)
+
+void abb_hnd(GtkWidget *abb, gpointer data)
 {
-    GtkApplication *app;
-    int status;
-
-    app = gtk_application_new("dist.library", G_APPLICATION_DEFAULT_FLAGS);
-
-    g_signal_connect(G_APPLICATION(app), "activate", G_CALLBACK(activate), NULL);
-
-    status = g_application_run(G_APPLICATION(app), argc, argv);
-
-    return status;
+    GtkWidget *window, *grid;
+    GtkWidget *id, *name, *author, *pub, *price;
+    GtkWidget *add, *cancel;
+    // Create window and container
+    window = gtk_application_window_new(app);
+    grid = gtk_grid_new();
+    id = gtk_entry_new();
+    name = gtk_entry_new();
+    author = gtk_entry_new();
+    pub = gtk_entry_new();
+    price = gtk_entry_new();
+    add = gtk_button_new_with_label("Add");
+    cancel = gtk_button_new_with_label("Cancel");
+    // Add widgets to grid
+    gtk_grid_attach(GTK_GRID(grid), id, 1, 1, 2, 1);
+    gtk_grid_attach(GTK_GRID(grid), name, 1, 3, 2, 1);
+    gtk_grid_attach(GTK_GRID(grid), author, 1, 5, 2, 1);
+    gtk_grid_attach(GTK_GRID(grid), pub, 1, 7, 2, 1);
+    gtk_grid_attach(GTK_GRID(grid), price, 1, 9, 2, 1);
+    gtk_grid_attach(GTK_GRID(grid), add, 1, 11, 2, 1);
+    gtk_grid_attach(GTK_GRID(grid), cancel, 1, 13, 2, 1);
+    // Add grid to window
+    gtk_container_add(GTK_CONTAINER(window), grid);
+    gtk_window_set_title(GTK_WINDOW(window), "Add book");
+    gtk_widget_show_all(window);
 }
+
+void fbb_hnd(GtkWidget *fbb, gpointer data)
+{
+    GtkWidget *window, *grid;
+    // Create window and container
+    window = gtk_application_window_new(app);
+    grid = gtk_grid_new();
+    // Add box to window
+    gtk_container_add(GTK_CONTAINER(window), grid);
+    gtk_window_set_title(GTK_WINDOW(window), "Find book");
+    gtk_widget_show_all(window);
+}
+
+void dbb_hnd(GtkWidget *dbb, gpointer data)
+{
+    GtkWidget *window, *grid;
+    // Create window and container
+    window = gtk_application_window_new(app);
+    grid = gtk_grid_new();
+    // Add box to window
+    gtk_container_add(GTK_CONTAINER(window), grid);
+    gtk_window_set_title(GTK_WINDOW(window), "Delete book");
+    gtk_widget_show_all(window);
+}
+
+void amb_hnd(GtkWidget *amb, gpointer data)
+{
+    GtkWidget *window, *grid;
+    // Create window and container
+    window = gtk_application_window_new(app);
+    grid = gtk_grid_new();
+    // Add box to window
+    gtk_container_add(GTK_CONTAINER(window), grid);
+    gtk_window_set_title(GTK_WINDOW(window), "Add member");
+    gtk_widget_show_all(window);
+}
+
+void fmb_hnd(GtkWidget *fmb, gpointer data)
+{
+    GtkWidget *window, *grid;
+    // Create window and container
+    window = gtk_application_window_new(app);
+    grid = gtk_grid_new();
+    // Add box to window
+    gtk_container_add(GTK_CONTAINER(window), grid);
+    gtk_window_set_title(GTK_WINDOW(window), "Find member");
+    gtk_widget_show_all(window);
+}
+
+void dmb_hnd(GtkWidget *dmb, gpointer data)
+{
+    GtkWidget *window, *grid;
+    // Create window and container
+    window = gtk_application_window_new(app);
+    grid = gtk_grid_new();
+    // Add box to window
+    gtk_container_add(GTK_CONTAINER(window), grid);
+    gtk_window_set_title(GTK_WINDOW(window), "Delete member");
+    gtk_widget_show_all(window);
+}
+
+void ib_hnd(GtkWidget *ib, gpointer data)
+{
+    GtkWidget *window, *grid;
+    // Create window and container
+    window = gtk_application_window_new(app);
+    grid = gtk_grid_new();
+    // Add box to window
+    gtk_container_add(GTK_CONTAINER(window), grid);
+    gtk_window_set_title(GTK_WINDOW(window), "Issue book");
+    gtk_widget_show_all(window);
+}
+
+void rb_hnd(GtkWidget *rb, gpointer data)
+{
+    GtkWidget *window, *grid;
+    // Create window and container
+    window = gtk_application_window_new(app);
+    grid = gtk_grid_new();
+    // Add box to window
+    gtk_container_add(GTK_CONTAINER(window), grid);
+    gtk_window_set_title(GTK_WINDOW(window), "Return book");
+    gtk_widget_show_all(window);
+}
+
