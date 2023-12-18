@@ -6,23 +6,23 @@
 // MEMBER definition
 typedef struct
 {
-    char id[];
-    char name[];
+    char id[6];
+    char name[50];
     int deposit;
 } MEMBER;
 
 // BOOK definition
 typedef struct
 {
-    char id[];
-    char name[];
-    char author[];
-    char pub[];
+    char id[6];
+    char name[50];
+    char author[50];
+    char pub[50];
     int price;
 } BOOK;
 
 // Member function
-int add_member(MEMBER *bk);
+int add_member(MEMBER *m);
 int find_member(char *id);
 int del_member(char *id);
 
