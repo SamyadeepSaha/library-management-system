@@ -28,7 +28,21 @@ int find_member(char *id)
 
 int del_member(char *id)
 {
-    return 0;
+    sqlite3 *db;
+    char *err_msg = 0;
+    char *sql = 0;
+    int status = 0;
+    sprintf(sql,"delete from members where id = '%s';", id);
+    if(sqlite3_open(DB, &db) == SQLITE_OK)
+    {
+        if(sqlite3_exec(db, sql, 0, 0, &err_msg) == SQLITE_OK)
+            printf("SQL deletion successful\n");
+        else
+            status = printf("SQL error: %s\n", err_msg);
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+    }
+    return status;
 }
 
 int add_book(BOOK *bk)
@@ -57,7 +71,21 @@ int find_book(char *id)
 
 int del_book(char *id)
 {
-    return 0;
+    sqlite3 *db;
+    char *err_msg = 0;
+    char *sql = 0;
+    int status = 0;
+    sprintf(sql,"delete from books where id = '%s';", id);
+    if(sqlite3_open(DB, &db) == SQLITE_OK)
+    {
+        if(sqlite3_exec(db, sql, 0, 0, &err_msg) == SQLITE_OK)
+            printf("SQL deletion successful\n");
+        else
+            status = printf("SQL error: %s\n", err_msg);
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+    }
+    return status;
 }
 
 int issue_book(char *bk_id, char *m_id)
