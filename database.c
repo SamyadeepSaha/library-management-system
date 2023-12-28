@@ -2,13 +2,14 @@
 #include<stdio.h>
 #include<sqlite3.h>
 
-int add_member(MEMBER *m)
+int insert_member(MEMBER m)
 {
     sqlite3 *db;
     char *err_msg = 0;
-    char *sql = 0;
+    char *sql = sqlite3_mprintf("insert into members values('%s', '%s', %d);", m.id, m.name, m.deposit);
     int status = 0;
-    sprintf(sql,"insert into members values('%s', '%s', '%d');", m->id, m->name, m->deposit);
+    //int count = printf("insert into members values('%s', '%s', %d);", m.id, m.name, m.deposit);
+    //printf("%d", count);
     if(sqlite3_open(DB, &db) == SQLITE_OK)
     {
         if(sqlite3_exec(db, sql, 0, 0, &err_msg) == SQLITE_OK)
@@ -18,6 +19,7 @@ int add_member(MEMBER *m)
         sqlite3_free(err_msg);
         sqlite3_close(db);
     }
+    sqlite3_free(sql);
     return status;
 }
 
@@ -30,9 +32,8 @@ int del_member(char *id)
 {
     sqlite3 *db;
     char *err_msg = 0;
-    char *sql = 0;
     int status = 0;
-    sprintf(sql,"delete from members where id = '%s';", id);
+    char *sql = sqlite3_mprintf("delete from members where id = '%s';", id);
     if(sqlite3_open(DB, &db) == SQLITE_OK)
     {
         if(sqlite3_exec(db, sql, 0, 0, &err_msg) == SQLITE_OK)
@@ -45,13 +46,12 @@ int del_member(char *id)
     return status;
 }
 
-int add_book(BOOK *bk)
+int insert_book(BOOK bk)
 {
     sqlite3 *db;
     char *err_msg = 0;
-    char *sql = 0;
     int status = 0;
-    sprintf(sql,"insert into books values('%s', '%s', '%s', '%s', '%d');", bk->id, bk->name, bk->author, bk->pub, bk->price);
+    char *sql = sqlite3_mprintf("insert into books values('%s', '%s', '%s', '%s', '%d');", bk.id, bk.name, bk.author, bk.pub, bk.price);
     if(sqlite3_open(DB, &db) == SQLITE_OK)
     {
         if(sqlite3_exec(db, sql, 0, 0, &err_msg) == SQLITE_OK)
@@ -73,9 +73,8 @@ int del_book(char *id)
 {
     sqlite3 *db;
     char *err_msg = 0;
-    char *sql = 0;
     int status = 0;
-    sprintf(sql,"delete from books where id = '%s';", id);
+    char *sql = sqlite3_mprintf("delete from books where id = '%s';", id);
     if(sqlite3_open(DB, &db) == SQLITE_OK)
     {
         if(sqlite3_exec(db, sql, 0, 0, &err_msg) == SQLITE_OK)
@@ -92,9 +91,8 @@ int issue_book(char *bk_id, char *m_id)
 {
     sqlite3 *db;
     char *err_msg = 0;
-    char *sql = 0;
     int status = 0;
-    sprintf(sql,"insert into issue values('%s', '%s', date('now'));", bk_id, m_id);
+    char *sql = sqlite3_mprintf("insert into issue values('%s', '%s', date('now'));", bk_id, m_id);
     if(sqlite3_open(DB, &db) == SQLITE_OK)
     {
         if(sqlite3_exec(db, sql, 0, 0, &err_msg) == SQLITE_OK)
@@ -112,9 +110,8 @@ int return_book(char *bk_id, char *m_id)
 {
     sqlite3 *db;
     char *err_msg = 0;
-    char *sql = 0;
     int status = 0;
-    sprintf(sql,"delete from issue where book_id = '%s' and member_id = '%s';", bk_id, m_id);
+    char *sql = sqlite3_mprintf("delete from issue where book_id = '%s' and member_id = '%s';", bk_id, m_id);
     if(sqlite3_open(DB, &db) == SQLITE_OK)
     {
         if(sqlite3_exec(db, sql, 0, 0, &err_msg) == SQLITE_OK)
