@@ -1,5 +1,5 @@
 #include<stdio.h>
-#include<string.h>
+#include"database.h"
 
 void clean_stdin()
 {
@@ -24,54 +24,45 @@ int take_input(char ip[50])
     return count;
 }
 
-int add_book()
+int add_member()
 {
-    FILE *fp;
-    char id[5],name[50],author[50],year[5];
-    printf("Enter book details:");
+    static MEMBER m;
+    printf("Enter member details:");
     printf("\nId: ");
-    scanf("%s",id);
+    scanf("%s",m.id);
     clean_stdin();
     printf("Name: ");
-    take_input(name);
-    printf("Author: ");
-    take_input(author);
-    printf("Year: ");
-    scanf("%s",year);
+    take_input(m.name);
+    printf("Deposit: ");
+    scanf("%d",&m.deposit);
+    printf("flag");
     clean_stdin();
-    fp=fopen("books.cvs","w");
-    if(fp)
-    {
-        fprintf(fp,"%s,%s,%s,%s",id,name,author,year);
-        fclose(fp);
-    }
+    insert_member(m);
     return 0;
 }
-int search_book()
+
+int add_book()
 {
+    BOOK bk;
+    printf("Enter book details:");
+    printf("\nId: ");
+    scanf("%s",bk.id);
+    clean_stdin();
+    printf("Name: ");
+    take_input(bk.name);
+    printf("Author: ");
+    take_input(bk.author);
+    printf("Publication: ");
+    take_input(bk.pub);
+    printf("Price: ");
+    scanf("%d",&bk.price);
+    clean_stdin();
+    insert_book(bk);
     return 0;
 }
-int del_book(char *key)
-{
-    return 0;
-}
-int show_book()
-{
-    FILE *fp;
-    char value;
-    fp=fopen("books.csv","rb");
-    if(fp)
-    {
-        while(1)
-        {
-            value=fgetc(fp);
-            if(value==EOF) break;
-            else printf("%c",value);
-        }
-    }
-    fclose(fp);
-    return 0;
-}
+
+
+
 int main()
 {
     int choice;
@@ -80,23 +71,42 @@ int main()
     {
         printf("\nSelect a option");
         printf("\n1. Add book");
-        printf("\n2. Show book");
-        printf("\n3. Search book");
-        printf("\n4. Exit");
+        printf("\n2. Delete book");
+        printf("\n3. Add member");
+        printf("\n4. Delete member");
+        printf("\n5. Issue book");
+        printf("\n6. Return book");
+        printf("\n7. Exit");
         printf("\nChoice: ");
         scanf("%d",&choice);
         switch(choice)
         {
+            char id[6];
             case 1:
                 add_book();
                 break;
             case 2:
-                show_book();
+                printf("Enter book id");
+                scanf("%s", &id);
+                del_book(id);
                 break;
             case 3:
-                search_book();
+                add_member();
                 break;
             case 4:
+                printf("Enter member id");
+                scanf("%s", &id);
+                del_member(id);
+                break;
+            case 5:
+                insert_issue();
+                break;
+            case 6:
+                printf("Enter issue id");
+                scanf("%s", &id);
+                del_issue(id);
+                break;
+            case 7:
                 printf("Exit.\n");
                 break;
             default:

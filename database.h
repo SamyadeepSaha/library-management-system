@@ -22,12 +22,12 @@ typedef struct
 } BOOK;
 
 // Member function
-int add_member(MEMBER *m);
+int insert_member(MEMBER m);
 int find_member(char *id);
 int del_member(char *id);
 
 // Book functions
-int add_book(BOOK *bk);
+int insert_book(BOOK bk);
 int find_book(char *id);
 int del_book(char *id);
 
