@@ -11,14 +11,14 @@ GTKFLAGS = `pkg-config --cflags gtk+-3.0`
 LIBS= -lsqlite3
 GTKLIBS = `pkg-config --libs gtk+-3.0`
 
-all: cli.o database.o
-	${CC} ${CFLAGS} -o lms database.o cli.o ${LIBS}
+all: main.o gui.o
+	${CC} ${CFLAGS} -o lms gui.o main.o ${GTKLIBS}
 
-main.o: main.c
-	${CC} ${CFLAGS} ${GTKFLAGS}	-o $@ -c $< ${GTKLIBS}
+main.o: main.c 
+	${CC} ${CFLAGS}	-o main.o -c main.c
 
 gui.o: gui.c
-	${CC} ${CFLAGS} ${GTKFLAGS}	-o $@ -c $< ${GTKLIBS}
+	${CC} ${CFLAGS} ${GTKFLAGS}	-o gui.o -c gui.c ${GTKLIBS}
 
 cli.o: cli.c
 	${CC} ${CFLAGS} -o $@ -c $<
@@ -30,4 +30,4 @@ run:
 	./lms
 
 clean:
-	rm lms *.o
+	rm -f lms *.o
