@@ -1,6 +1,11 @@
 #include"database.h"
 #include<stdio.h>
+#include<stdlib.h>
 #include<sqlite3.h>
+#include<string.h>
+
+MEMBER found_member;
+BOOK found_book;
 
 int insert_member(MEMBER m)
 {
@@ -23,9 +28,31 @@ int insert_member(MEMBER m)
     return status;
 }
 
+int member_callback(void *NotUsed, int argc, char **argv, char **azColname)
+{
+    NotUsed = 0;
+    strcpy(found_member.id, argv[0] ? argv[0] : "NULL");
+    strcpy(found_member.name, argv[1] ? argv[1] : "NULL");
+    found_member.deposit = atoi((char*)(argv[2]));
+    return 0;
+}
+
 int find_member(char *id)
 {
-    return 0;
+    int status;
+    sqlite3 *db;
+    char *err_msg = 0;
+    char *sql = sqlite3_mprintf("SELECT * FROM members where id = '%s';", id);
+    if(sqlite3_open(DB, &db) == SQLITE_OK)
+    {
+        if(sqlite3_exec(db, sql, member_callback, 0, &err_msg) == SQLITE_OK)
+            printf("SQL query successful\n");
+        else
+            status = printf("SQL error: %s\n", err_msg);
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+    }
+    return status;
 }
 
 int del_member(char *id)
@@ -64,9 +91,33 @@ int insert_book(BOOK bk)
     return status;
 }
 
+int book_callback(void *NotUsed, int argc, char **argv, char **azColname)
+{
+    NotUsed = 0;
+    strcpy(found_book.id, argv[0] ? argv[0] : "NULL");
+    strcpy(found_book.name, argv[1] ? argv[1] : "NULL");
+    strcpy(found_book.author, argv[2] ? argv[2] : "NULL");
+    strcpy(found_book.pub, argv[3] ? argv[3] : "NULL");
+    found_book.price = atoi((char*)(argv[4]));
+    return 0;
+}
+
 int find_book(char *id)
 {
-    return 0;
+    int status;
+    sqlite3 *db;
+    char *err_msg = 0;
+    char *sql = sqlite3_mprintf("SELECT * FROM books where id = '%s';", id);
+    if(sqlite3_open(DB, &db) == SQLITE_OK)
+    {
+        if(sqlite3_exec(db, sql, book_callback, 0, &err_msg) == SQLITE_OK)
+            printf("SQL query successful\n");
+        else
+            status = printf("SQL error: %s\n", err_msg);
+        sqlite3_free(err_msg);
+        sqlite3_close(db);
+    }
+    return status;
 }
 
 int del_book(char *id)
