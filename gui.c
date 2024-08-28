@@ -103,15 +103,47 @@ void dbb_hnd(GtkWidget *dbb, gpointer data)
     gtk_widget_show_all(window);
 }
 
+void add_member_submit_handler()
+{
+    MEMBER m;
+    char *buffer;
+    buffer = (char*)(gtk_entry_get_text(GTK_ENTRY(entry1)));
+    if(strlen(buffer) < 6) strcpy(m.id, buffer);
+    buffer = (char*)(gtk_entry_get_text(GTK_ENTRY(entry2)));
+    if(strlen(buffer) < 50) strcpy(m.name, buffer);
+    m.deposit = atoi((char*)(gtk_entry_get_text(GTK_ENTRY(entry3))));
+    insert_member(m);
+}
+
 void amb_hnd(GtkWidget *amb, gpointer data)
 {
-    GtkWidget *heading;
+    GtkWidget *heading, *label1, *label2, *label3;
+    GtkWidget *submit_button, *clear_button;
     // Remove previous form
     gtk_container_remove(GTK_CONTAINER(grid), form);
     form = gtk_fixed_new();
     // Add lable to empty container
     heading = gtk_label_new("Add member");
     gtk_fixed_put(GTK_FIXED(form), heading, 10, 10);
+    label1 = gtk_label_new("ID");
+    gtk_fixed_put(GTK_FIXED(form), label1, 10, 50);
+    entry1 = gtk_entry_new();
+    gtk_fixed_put(GTK_FIXED(form), entry1, 100, 50);
+    label2 = gtk_label_new("Name");
+    gtk_fixed_put(GTK_FIXED(form), label2, 10, 90);
+    entry2 = gtk_entry_new();
+    gtk_fixed_put(GTK_FIXED(form), entry2, 100, 90);
+    label3 = gtk_label_new("Deposit");
+    gtk_fixed_put(GTK_FIXED(form), label3, 10, 130);
+    entry3 = gtk_entry_new();
+    gtk_fixed_put(GTK_FIXED(form), entry3, 100, 130);
+
+    submit_button = gtk_button_new_with_label("Submit");
+    g_signal_connect(submit_button, "clicked", G_CALLBACK(add_member_submit_handler), NULL);
+    gtk_fixed_put(GTK_FIXED(form), submit_button, 50, 280);
+    clear_button = gtk_button_new_with_label("Clear");
+    g_signal_connect(clear_button, "clicked", G_CALLBACK(clear_entry), NULL);
+    gtk_fixed_put(GTK_FIXED(form), clear_button, 150, 280);
 
     // Attach form to grid
     gtk_grid_attach(GTK_GRID(grid), form, 1, 0, 10, 10);
