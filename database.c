@@ -87,7 +87,7 @@ int del_book(char *id)
     return status;
 }
 
-int insert_issue(char *bk_id, char *m_id)
+int issue_book(char *bk_id, char *m_id)
 {
     sqlite3 *db;
     char *err_msg = 0;
@@ -106,7 +106,7 @@ int insert_issue(char *bk_id, char *m_id)
     return 0;
 }
 
-int del_issue(char *bk_id, char *m_id)
+int return_book(char *bk_id, char *m_id)
 {
     sqlite3 *db;
     char *err_msg = 0;
