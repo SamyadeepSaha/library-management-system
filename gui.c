@@ -1,5 +1,6 @@
 #include<gtk/gtk.h>
 #include"gui.h"
+#include"database.h"
 
 GtkApplication *app;
 
@@ -12,6 +13,18 @@ void clear_entry()
 
 void add_book_submit_handler()
 {
+    BOOK bk;
+    char *buffer;
+    buffer = (char*)(gtk_entry_get_text(GTK_ENTRY(entry1)));
+    if(strlen(buffer) < 6) strcpy(bk.id, buffer);
+    buffer = (char*)(gtk_entry_get_text(GTK_ENTRY(entry2)));
+    if(strlen(buffer) < 50) strcpy(bk.name, buffer);
+    buffer = (char*)(gtk_entry_get_text(GTK_ENTRY(entry3)));
+    if(strlen(buffer) < 50) strcpy(bk.author, buffer);
+    buffer = (char*)(gtk_entry_get_text(GTK_ENTRY(entry4)));
+    if(strlen(buffer) < 50) strcpy(bk.pub, buffer);
+    bk.price = atoi((char*)(gtk_entry_get_text(GTK_ENTRY(entry5))));
+    insert_book(bk);
 }
 
 void abb_hnd(GtkWidget *abb, gpointer data)
