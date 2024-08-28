@@ -87,15 +87,33 @@ void fbb_hnd(GtkWidget *fbb, gpointer data)
     gtk_widget_show_all(window);
 }
 
+void delete_book_submit_handler()
+{
+    char *buffer;
+    buffer = (char*)(gtk_entry_get_text(GTK_ENTRY(entry1)));
+    if(strlen(buffer) < 6) del_book(buffer);
+}
+
 void dbb_hnd(GtkWidget *dbb, gpointer data)
 {
-    GtkWidget *heading;
+    GtkWidget *heading, *label1;
+    GtkWidget *submit_button, *clear_button;
     // Remove previous form
     gtk_container_remove(GTK_CONTAINER(grid), form);
     form = gtk_fixed_new();
     // Add lable to empty container
     heading = gtk_label_new("Delete book");
     gtk_fixed_put(GTK_FIXED(form), heading, 10, 10);
+    label1 = gtk_label_new("ID");
+    gtk_fixed_put(GTK_FIXED(form), label1, 10, 50);
+    entry1 = gtk_entry_new();
+    gtk_fixed_put(GTK_FIXED(form), entry1, 100, 50);
+    submit_button = gtk_button_new_with_label("Submit");
+    g_signal_connect(submit_button, "clicked", G_CALLBACK(delete_book_submit_handler), NULL);
+    gtk_fixed_put(GTK_FIXED(form), submit_button, 50, 280);
+    clear_button = gtk_button_new_with_label("Clear");
+    g_signal_connect(clear_button, "clicked", G_CALLBACK(clear_entry), NULL);
+    gtk_fixed_put(GTK_FIXED(form), clear_button, 150, 280);
 
     // Attach form to grid
     gtk_grid_attach(GTK_GRID(grid), form, 1, 0, 10, 10);
@@ -167,15 +185,33 @@ void fmb_hnd(GtkWidget *fmb, gpointer data)
     gtk_widget_show_all(window);
 }
 
+void delete_member_submit_handler()
+{
+    char *buffer;
+    buffer = (char*)(gtk_entry_get_text(GTK_ENTRY(entry1)));
+    if(strlen(buffer) < 6) del_member(buffer);
+}
+
 void dmb_hnd(GtkWidget *dmb, gpointer data)
 {
-    GtkWidget *heading;
+    GtkWidget *heading, *label1;
+    GtkWidget *submit_button, *clear_button;
     // Remove previous form
     gtk_container_remove(GTK_CONTAINER(grid), form);
     form = gtk_fixed_new();
     // Add lable to empty container
     heading = gtk_label_new("Delete member");
     gtk_fixed_put(GTK_FIXED(form), heading, 10, 10);
+    label1 = gtk_label_new("ID");
+    gtk_fixed_put(GTK_FIXED(form), label1, 10, 50);
+    entry1 = gtk_entry_new();
+    gtk_fixed_put(GTK_FIXED(form), entry1, 100, 50);
+    submit_button = gtk_button_new_with_label("Submit");
+    g_signal_connect(submit_button, "clicked", G_CALLBACK(delete_member_submit_handler), NULL);
+    gtk_fixed_put(GTK_FIXED(form), submit_button, 50, 280);
+    clear_button = gtk_button_new_with_label("Clear");
+    g_signal_connect(clear_button, "clicked", G_CALLBACK(clear_entry), NULL);
+    gtk_fixed_put(GTK_FIXED(form), clear_button, 150, 280);
 
     // Attach form to grid
     gtk_grid_attach(GTK_GRID(grid), form, 1, 0, 10, 10);
