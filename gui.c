@@ -1,11 +1,24 @@
+#include<stdlib.h>
 #include<gtk/gtk.h>
 #include"gui.h"
 #include"database.h"
+
+
+char* itoa(int val, int base)
+{
+	static char buf[32] = {0};
+	int i = 30;
+	for(; val && i ; --i, val /= base)
+		buf[i] = "0123456789abcdef"[val % base];
+	return &buf[i+1];
+}
 
 GtkApplication *app;
 
 static GtkWidget *window, *grid, *form;
 static GtkWidget *entry1, *entry2, *entry3, *entry4, *entry5;
+static GtkWidget *label2, *label3, *label4, *label5;
+static GtkWidget *output2, *output3, *output4, *output5;
 
 void clear_entry()
 {
@@ -71,15 +84,73 @@ void abb_hnd(GtkWidget *abb, gpointer data)
     gtk_widget_show_all(window);
 }
 
+void find_book_submit_handler()
+{
+    char *buffer;
+    buffer = (char*)(gtk_entry_get_text(GTK_ENTRY(entry1)));
+    if(strlen(buffer) < 6) find_book(buffer);
+    if(found)
+    {
+        printf("flag\n %s \n %s \n %d", found_book.name, found_book.author, found_book.price);
+        gtk_container_remove(GTK_CONTAINER(form), label2);
+        label2 = gtk_label_new("Name:");
+        gtk_fixed_put(GTK_FIXED(form), label2, 10, 100);
+        gtk_container_remove(GTK_CONTAINER(form), output2);
+        output2 = gtk_label_new(found_book.name);
+        gtk_fixed_put(GTK_FIXED(form), output2, 100, 100);
+        gtk_container_remove(GTK_CONTAINER(form), label3);
+        label3 = gtk_label_new("Author:");
+        gtk_fixed_put(GTK_FIXED(form), label3, 10, 130);
+        gtk_container_remove(GTK_CONTAINER(form), output3);
+        output3 = gtk_label_new(found_book.author);
+        gtk_fixed_put(GTK_FIXED(form), output3, 100, 130);
+        gtk_container_remove(GTK_CONTAINER(form), label4);
+        label4 = gtk_label_new("Publication:");
+        gtk_fixed_put(GTK_FIXED(form), label4, 10, 160);
+        gtk_container_remove(GTK_CONTAINER(form), output4);
+        output4 = gtk_label_new(found_book.pub);
+        gtk_fixed_put(GTK_FIXED(form), output4, 100, 160);
+        gtk_container_remove(GTK_CONTAINER(form), label5);
+        label5 = gtk_label_new("Price:");
+        gtk_fixed_put(GTK_FIXED(form), label5, 10, 190);
+        gtk_container_remove(GTK_CONTAINER(form), output5);
+        output5 = gtk_label_new(itoa(found_book.price, 10));
+        gtk_fixed_put(GTK_FIXED(form), output5, 100, 190);
+    }
+    else
+    {
+        gtk_container_remove(GTK_CONTAINER(form), label2);
+        gtk_container_remove(GTK_CONTAINER(form), output2);
+        gtk_container_remove(GTK_CONTAINER(form), label3);
+        gtk_container_remove(GTK_CONTAINER(form), output3);
+        gtk_container_remove(GTK_CONTAINER(form), label4);
+        gtk_container_remove(GTK_CONTAINER(form), output4);
+        gtk_container_remove(GTK_CONTAINER(form), label5);
+        gtk_container_remove(GTK_CONTAINER(form), output5);
+        label2 = gtk_label_new("Not found");
+        gtk_fixed_put(GTK_FIXED(form), label2, 10, 100);
+    }
+    // Render gtk window
+    gtk_widget_show_all(window);
+}
+
 void fbb_hnd(GtkWidget *fbb, gpointer data)
 {
-    GtkWidget *heading;
+    GtkWidget *heading, *label1;
+    GtkWidget *submit_button;
     // Remove previous form
     gtk_container_remove(GTK_CONTAINER(grid), form);
     form = gtk_fixed_new();
     // Add lable to empty container
     heading = gtk_label_new("Find book");
     gtk_fixed_put(GTK_FIXED(form), heading, 10, 10);
+    label1 = gtk_label_new("ID");
+    gtk_fixed_put(GTK_FIXED(form), label1, 10, 50);
+    entry1 = gtk_entry_new();
+    gtk_fixed_put(GTK_FIXED(form), entry1, 100, 50);
+    submit_button = gtk_button_new_with_label("Submit");
+    g_signal_connect(submit_button, "clicked", G_CALLBACK(find_book_submit_handler), NULL);
+    gtk_fixed_put(GTK_FIXED(form), submit_button, 100, 280);
 
     // Attach form to grid
     gtk_grid_attach(GTK_GRID(grid), form, 1, 0, 10, 10);
@@ -169,15 +240,58 @@ void amb_hnd(GtkWidget *amb, gpointer data)
     gtk_widget_show_all(window);
 }
 
+void find_member_submit_handler()
+{
+    char *buffer;
+    buffer = (char*)(gtk_entry_get_text(GTK_ENTRY(entry1)));
+    if(strlen(buffer) < 6) find_member(buffer);
+    if(found)
+    {
+        printf("%s \n %d", found_member.name, found_member.deposit);
+        gtk_container_remove(GTK_CONTAINER(form), label2);
+        label2 = gtk_label_new("Name:");
+        gtk_fixed_put(GTK_FIXED(form), label2, 10, 100);
+        gtk_container_remove(GTK_CONTAINER(form), output2);
+        output2 = gtk_label_new(found_member.name);
+        gtk_fixed_put(GTK_FIXED(form), output2, 100, 100);
+        //printf("flag");
+        gtk_container_remove(GTK_CONTAINER(form), label3);
+        label3 = gtk_label_new("Deposit:");
+        gtk_fixed_put(GTK_FIXED(form), label3, 10, 130);
+        gtk_container_remove(GTK_CONTAINER(form), output3);
+        output3 = gtk_label_new(itoa(found_member.deposit, 10));
+        gtk_fixed_put(GTK_FIXED(form), output3, 100, 130);
+    }
+    else
+    {
+        gtk_container_remove(GTK_CONTAINER(form), label2);
+        gtk_container_remove(GTK_CONTAINER(form), output2);
+        gtk_container_remove(GTK_CONTAINER(form), label3);
+        gtk_container_remove(GTK_CONTAINER(form), output3);
+        label2 = gtk_label_new("Not found");
+        gtk_fixed_put(GTK_FIXED(form), label2, 10, 100);
+    }
+    // Render gtk window
+    gtk_widget_show_all(window);
+}
+
 void fmb_hnd(GtkWidget *fmb, gpointer data)
 {
-    GtkWidget *heading;
+    GtkWidget *heading, *label1;
+    GtkWidget *submit_button;
     // Remove previous form
     gtk_container_remove(GTK_CONTAINER(grid), form);
     form = gtk_fixed_new();
     // Add lable to empty container
     heading = gtk_label_new("Find member");
     gtk_fixed_put(GTK_FIXED(form), heading, 10, 10);
+    label1 = gtk_label_new("ID");
+    gtk_fixed_put(GTK_FIXED(form), label1, 10, 50);
+    entry1 = gtk_entry_new();
+    gtk_fixed_put(GTK_FIXED(form), entry1, 100, 50);
+    submit_button = gtk_button_new_with_label("Submit");
+    g_signal_connect(submit_button, "clicked", G_CALLBACK(find_member_submit_handler), NULL);
+    gtk_fixed_put(GTK_FIXED(form), submit_button, 100, 280);
 
     // Attach form to grid
     gtk_grid_attach(GTK_GRID(grid), form, 1, 0, 10, 10);

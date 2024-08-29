@@ -35,4 +35,8 @@ int del_book(char *id);
 int issue_book(char *bk_id, char *m_id);
 int return_book(char *bk_id, char *m_id);
 
+extern MEMBER found_member;
+extern BOOK found_book;
+extern int found;
+
 #endif
