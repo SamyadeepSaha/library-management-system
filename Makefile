@@ -26,7 +26,7 @@ cli.o: cli.c
 database.o: database.c
 	${CC} ${CFLAGS} -o $@ -c $< ${LIBS}
 
-run:
+run: all
 	./lms
 
 clean:
